@@ -1,0 +1,62 @@
+# =========================================================================
+# General .gitignore for a Rust Workspace Project
+# =========================================================================
+
+# Ignore build artifacts from Cargo. This is the most important rule.
+# Because this is a workspace, there will be only ONE target directory
+# at the root of the project.
+/target/
+
+# The Cargo.lock file ensures reproducible builds. It's generally
+# recommended to commit this file for both library and binary projects
+# to lock dependency versions. Do NOT ignore it unless you have a
+# specific reason to want dependencies to be updated on every build.
+# !Cargo.lock
+
+# Ignore log files and other generated output
+*.log
+*.rlib
+
+# =========================================================================
+# Editor and IDE specific files
+# =========================================================================
+
+# VS Code
+.vscode/
+!.vscode/extensions.json
+
+# JetBrains (RustRover, CLion, etc.)
+.idea/
+
+# Vim
+*~
+*.swp
+*.swo
+
+# =========================================================================
+# Operating System specific files
+# =========================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# =========================================================================
+# Other common files to ignore
+# =========================================================================
+
+# Environment variables file
+.env
+.env.*
+!.env.example
+
+# Build directory for other tools (e.g., frontend assets)
+/build/
+/dist/
+
