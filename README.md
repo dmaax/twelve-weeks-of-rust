@@ -30,14 +30,14 @@ This repository is structured as a monorepo, with each phase of the learning pla
 
 | Phase | Title | Status | Key Deliverable |
 | :---: | :--- | :--- | :--- |
-| **[Phase 1](./fase-01-fundamentos/)** | Rust Fundamentals | ⏳ **In Progress** | `RPG Simulator` |
-| **[Phase 2](./fase-02-networking-basico/)** | Basic Networking | 🔜 To Do | `Multi-Client Chat Server` |
-| **[Phase 3](./fase-03-protocolos-binarios/)** | Binary Protocols | 🔜 To Do | `DNS Client` |
-| **[Phase 4](./fase-04-async/)** | Async Programming | 🔜 To Do | `Async Game Server` |
-| **[Phase 5](./fase-05-protocolo-minecraft/)** | Minecraft Protocol Study | 🔜 To Do | `Packet Framework` |
-| **[Phase 6](./fase-06-implementacao-bot/)** | Bot Implementation | 🔜 To Do | `Functional Minecraft Bot` |
+| **[Phase 1](./phase-01-fundamentals/)** | Rust Fundamentals | ⏳ **In Progress** | `RPG Simulator` |
+| **[Phase 2](./phase-02-basic-networking/)** | Basic Networking | 🔜 To Do | `Multi-Client Chat Server` |
+| **[Phase 3](./phase-03-binary-protocols/)** | Binary Protocols | 🔜 To Do | `DNS Client` |
+| **[Phase 4](./phase-04-async/)** | Async Programming | 🔜 To Do | `Async Game Server` |
+| **[Phase 5](./phase-05-minecraft-protocol/)** | Minecraft Protocol Study | 🔜 To Do | `Packet Framework` |
+| **[Phase 6](./phase-06-bot-implementation/)** | Bot Implementation | 🔜 To Do | `Functional Minecraft Bot` |
 
-> For a day-by-day breakdown of tasks and goals, see the **[Full 12-Week Plan](./PLAN.md)**.
+> For a day-by-day breakdown of tasks and goals, see the **[Full 12-Week Plan](./docs/PLAN.md)**.
 
 ---
 
