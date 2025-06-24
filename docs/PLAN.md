@@ -11,8 +11,8 @@
 **Goal:** Master Rust's fundamental concepts
 
 #### Day 1-2: Setup and First Steps
-- [ ] Install Rust via rustup
-- [ ] Set up VS Code with rust-analyzer
+- [x] Install Rust via rustup
+- [x] Set up VS Code with rust-analyzer
 - [ ] Read Rust Book Chapters 1-3
 - [ ] **Project:** Hello World and variables
 
