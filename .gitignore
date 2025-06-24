@@ -60,3 +60,7 @@ Desktop.ini
 /build/
 /dist/
 
+## Node.js stuff
+worker/node_modules/
+worker/static_build/
+worker-configuration.d.ts
