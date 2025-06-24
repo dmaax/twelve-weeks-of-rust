@@ -1,0 +1,12 @@
+{
+  "name": "worker",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "prebuild": "node prebuild.js",
+    "deploy": "npm run prebuild && npx wrangler publish",
+    "dev": "npm run prebuild && npx wrangler dev"
+  },
+  "dependencies": {}
+}
+
