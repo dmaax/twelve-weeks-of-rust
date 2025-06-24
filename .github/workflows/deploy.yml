@@ -1,0 +1,34 @@
+name: Deploy Static Website to GitHub Pages
+
+on:
+  # Roda sempre que houver um push na branch 'main'
+  push:
+    branches:
+      - main
+  # Permite rodar este workflow manualmente na aba Actions
+  workflow_dispatch:
+
+# Define as permissões para a action poder fazer o deploy
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './static'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
