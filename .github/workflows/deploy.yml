@@ -1,0 +1,34 @@
+name: Deploy Cloudflare Worker
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: Main
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependências
+        run: npm ci
+        working-directory: worker
+
+      - name: Build assets (prebuild)
+        run: npm run prebuild
+        working-directory: worker
+
+      - name: Deploy para Cloudflare Workers
+        run: npx wrangler publish --account-id=${{ secrets.CF_ACCOUNT_ID }}
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
