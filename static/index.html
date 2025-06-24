@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rust Learning Plan Dashboard</title>
+    <style>
+        :root {
+            /* Light theme colors */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            
+            /* Orange theme colors */
+            --orange-50: #fff7ed;
+            --orange-100: #ffedd5;
+            --orange-200: #fed7aa;
+            --orange-300: #fdba74;
+            --orange-400: #fb923c;
+            --orange-500: #f97316;
+            --orange-600: #ea580c;
+            --orange-700: #c2410c;
+            --orange-800: #9a3412;
+            --orange-900: #7c2d12;
+            
+            /* Green colors for completed tasks */
+            --green-50: #f0fdf4;
+            --green-100: #dcfce7;
+            --green-200: #bbf7d0;
+            --green-500: #22c55e;
+            --green-600: #16a34a;
+            --green-800: #166534;
+            --green-900: #14532d;
+            
+            /* Blue colors for in-progress */
+            --blue-50: #eff6ff;
+            --blue-100: #dbeafe;
+            --blue-200: #bfdbfe;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            
+            /* Red colors for errors */
+            --red-50: #fef2f2;
+            --red-100: #fee2e2;
+            --red-500: #ef4444;
+            --red-600: #dc2626;
+            --red-800: #991b1b;
+            
+            /* Purple colors for phases */
+            --purple-50: #faf5ff;
+            --purple-100: #f3e8ff;
+            --purple-500: #8b5cf6;
+            --purple-600: #7c3aed;
+        }
+
+        [data-theme="dark"] {
+            /* Dark theme colors */
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border-color: #334155;
+            --border-hover: #475569;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+            
+            /* Adjust colors for dark mode */
+            --green-50: #14532d;
+            --green-100: #166534;
+            --green-200: #16a34a;
+            --blue-50: #1e3a8a;
+            --blue-100: #1d4ed8;
+            --red-50: #991b1b;
+            --red-100: #dc2626;
+            --purple-50: #581c87;
+            --purple-100: #6b21a8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--orange-600), var(--orange-800));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Control buttons */
+        .control-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .control-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 2rem;
+            padding: 0.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .theme-icon {
+            width: 1rem;
+            height: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 3rem;
+            height: 1.5rem;
+            background: var(--border-color);
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: var(--orange-600);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 1.25rem;
+            height: 1.25rem;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(1.5rem);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-completed { color: var(--green-600); }
+        .stat-total { color: var(--blue-600); }
+        .stat-remaining { color: var(--orange-600); }
+        .stat-phases { color: var(--purple-600); }
+
+        /* Cards */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: var(--border-hover);
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Progress Section */
+        .progress-card {
+            margin-bottom: 2rem;
+            border-color: var(--orange-200);
+        }
+
+        [data-theme="dark"] .progress-card {
+            border-color: var(--orange-800);
+        }
+
+        .progress-text {
+            text-align: center;
+            font-size: 1.125rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--green-500), var(--green-600));
+            border-radius: 0.5rem;
+            transition: width 0.8s ease;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-percentage {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--orange-600);
+        }
+
+        /* Filter Controls */
+        .filter-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--orange-300);
+            color: var(--text-primary);
+        }
+
+        .filter-btn.active {
+            background: var(--orange-600);
+            color: white;
+            border-color: var(--orange-600);
+        }
+
+        /* Phase Cards */
+        .phases-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .phase-card {
+            border-color: var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .phase-card.collapsed .card-content {
+            display: none;
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .phase-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .phase-icon {
+            color: var(--orange-600);
+            font-size: 1.25rem;
+        }
+
+        .phase-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .phase-progress-bar {
+            width: 60px;
+            height: 4px;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .phase-progress-fill {
+            height: 100%;
+            background: var(--green-500);
+            transition: width 0.5s ease;
+        }
+
+        .collapse-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .collapse-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        /* Tasks */
+        .tasks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--bg-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--orange-600);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .task-item:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--border-hover);
+            transform: translateX(4px);
+        }
+
+        .task-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .task-item.completed {
+            background: var(--green-50);
+            border-color: var(--green-200);
+        }
+
+        .task-item.completed::before {
+            background: var(--green-500);
+            transform: scaleY(1);
+        }
+
+        [data-theme="dark"] .task-item.completed {
+            background: var(--green-50);
+            border-color: var(--green-100);
+        }
+
+        .task-checkbox {
+            width: 1.25rem;
+            height: 1.25rem;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .task-text {
+            flex: 1;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .task-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-left: auto;
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--border-color) 50%, var(--bg-tertiary) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 0.5rem;
+        }
+
+        .skeleton-title {
+            height: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .skeleton-stats {
+            height: 6rem;
+            margin-bottom: 2rem;
+        }
+
+        .skeleton-progress {
+            height: 8rem;
+            margin-bottom: 2rem;
+        }
+
+        .skeleton-phase {
+            height: 12rem;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Error State */
+        .error-card {
+            border-color: var(--red-100);
+            background: var(--red-50);
+        }
+
+        .error-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .error-title {
+            color: var(--red-800);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .error-message {
+            color: var(--red-600);
+            margin-bottom: 1rem;
+        }
+
+        .error-code {
+            background: var(--red-100);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-family: monospace;
+        }
+
+        /* Success toast */
+        .toast {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--green-600);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-lg);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        /* Motivational quotes */
+        .quote-card {
+            background: linear-gradient(135deg, var(--purple-50), var(--blue-50));
+            border: 1px solid var(--purple-100);
+            margin-bottom: 2rem;
+        }
+
+        .quote-text {
+            font-style: italic;
+            font-size: 1.125rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .quote-author {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            
+            .header-controls {
+                justify-content: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .filter-controls {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="title">
+                <span>🦀</span>
+                <span>Rust Learning Dashboard</span>
+            </h1>
+            <div class="header-controls">
+                <button class="control-btn" id="resetBtn">
+                    <span>🔄</span>
+                    <span>Reset Progress</span>
+                </button>
+                <button class="control-btn" id="exportBtn">
+                    <span>📊</span>
+                    <span>Export Progress</span>
+                </button>
+                <div class="theme-toggle">
+                    <svg class="theme-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <div class="toggle-switch" id="themeToggle">
+                        <div class="toggle-slider"></div>
+                    </div>
+                    <svg class="theme-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div id="app-container">
+            <!-- Loading State -->
+            <div id="loading-state" class="loading">
+                <div class="skeleton skeleton-title"></div>
+                <div class="skeleton skeleton-stats"></div>
+                <div class="skeleton skeleton-progress"></div>
+                <div class="skeleton skeleton-phase"></div>
+                <div class="skeleton skeleton-phase"></div>
+                <div class="skeleton skeleton-phase"></div>
+            </div>
+
+            <!-- Error State -->
+            <div id="error-state" class="card error-card" style="display: none;">
+                <div class="card-content" style="text-align: center;">
+                    <div class="error-icon">⚠️</div>
+                    <h2 class="error-title">Failed to Load Plan</h2>
+                    <p class="error-message">
+                        Could not fetch or parse the <code class="error-code">./docs/PLAN.md</code> file.
+                    </p>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        <strong>Common Fix:</strong> This page must be served by a web server, not opened directly from your file system.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Main Dashboard -->
+            <div id="dashboard" style="display: none;">
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value stat-completed" id="stat-completed">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value stat-total" id="stat-total">0</div>
+                        <div class="stat-label">Total Tasks</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value stat-remaining" id="stat-remaining">0</div>
+                        <div class="stat-label">Remaining</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value stat-phases" id="stat-phases">0</div>
+                        <div class="stat-label">Phases</div>
+                    </div>
+                </div>
+
+                <!-- Motivational Quote -->
+                <div class="card quote-card">
+                    <div class="card-content">
+                        <div class="quote-text" id="motivational-quote">
+                            "The most dangerous phrase in the language is, 'We've always done it this way.'"
+                        </div>
+                        <div class="quote-author">— Grace Hopper</div>
+                    </div>
+                </div>
+
+                <!-- Progress Summary -->
+                <div class="card progress-card">
+                    <div class="card-header">
+                        <div class="progress-text" id="progress-text">
+                            Overall Progress: 0 / 0 tasks completed
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <div class="progress-percentage" id="progress-percentage">0%</div>
+                    </div>
+                </div>
+
+                <!-- Filter Controls -->
+                <div class="filter-controls">
+                    <button class="filter-btn active" data-filter="all">All Tasks</button>
+                    <button class="filter-btn" data-filter="completed">Completed</button>
+                    <button class="filter-btn" data-filter="pending">Pending</button>
+                    <button class="filter-btn" data-filter="expand-all">Expand All</button>
+                    <button class="filter-btn" data-filter="collapse-all">Collapse All</button>
+                </div>
+
+                <!-- Phases Container -->
+                <div class="phases-container" id="phases-container"></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Keep learning and building amazing things with Rust! 🚀</p>
+            <p style="margin-top: 0.5rem; font-size: 0.75rem;">
+                Progress is automatically saved to your browser
+            </p>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // Theme Management
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // Check for saved theme preference or default to light mode
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme);
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            setTheme(newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+        
+        function setTheme(theme) {
+            body.setAttribute('data-theme', theme);
+            themeToggle.classList.toggle('active', theme === 'dark');
+        }
+
+        // Motivational quotes
+        const motivationalQuotes = [
+            { text: "The most dangerous phrase in the language is, 'We've always done it this way.'", author: "Grace Hopper" },
+            { text: "Programs must be written for people to read, and only incidentally for machines to execute.", author: "Harold Abelson" },
+            { text: "The best way to learn is by doing.", author: "Richard Branson" },
+            { text: "Code is like humor. When you have to explain it, it's bad.", author: "Cory House" },
+            { text: "First, solve the problem. Then, write the code.", author: "John Johnson" },
+            { text: "Learning never exhausts the mind.", author: "Leonardo da Vinci" },
+            { text: "The expert in anything was once a beginner.", author: "Helen Hayes" }
+        ];
+
+        function updateMotivationalQuote() {
+            const quote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+            document.getElementById('motivational-quote').textContent = quote.text;
+            document.querySelector('.quote-author').textContent = `— ${quote.author}`;
+        }
+
+        // Toast notifications
+        function showToast(message, duration = 3000) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        // Dashboard Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const MARKDOWN_FILE_PATH = '../docs/PLAN.md';
+            const STORAGE_KEY = 'rust-learning-progress';
+            
+            // Mock data for demonstration
+            const mockMarkdownData = `
+## 📋 PHASE 1: Rust Fundamentals
+- [x] Install Rust and set up development environment
+- [x] Learn about ownership and borrowing
+- [ ] Understand structs and enums
+- [ ] Practice with pattern matching
+- [ ] Complete basic exercises
+- [ ] Read "The Rust Programming Language" chapters 1-8
+
+## 📋 PHASE 2: Advanced Concepts
+- [x] Learn about lifetimes
+- [ ] Understand traits and generics
+- [ ] Work with collections (Vec, HashMap)
+- [ ] Error handling with Result and Option
+- [ ] Concurrency basics
+- [ ] Practice with closures and iterators
+
+## 📋 PHASE 3: Real-world Projects
+- [ ] Build a CLI application
+- [ ] Create a web server with Actix
+- [ ] Work with databases (SQLx)
+- [ ] Deploy a Rust application
+- [ ] Contribute to open source
+- [ ] Build a complete full-stack project
+
+## 📋 PHASE 4: Mastery & Specialization
+- [ ] Advanced memory management
+- [ ] Unsafe Rust and FFI
+- [ ] Performance optimization
+- [ ] Contribute to Rust ecosystem
+- [ ] Mentor other developers
+            `.trim();
+
+            let phases = [];
+            let totalTasks = 0;
+            let completedTasks = 0;
+            let currentFilter = 'all';
+
+            // Load saved progress
+            function loadProgress() {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                return saved ? JSON.parse(saved) : null;
+            }
+
+            // Save progress
+            function saveProgress() {
+                const progressData = {
+                    phases: phases,
+                    timestamp: new Date().toISOString()
+                };
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(progressData));
+            }
+
+            async function buildDashboard() {
+                try {
+                    showLoading();
+                    
+                    // Simulate network delay
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    // Try to fetch real markdown file, fallback to mock data
+                    let markdownText;
+                    try {
+                        const response = await fetch(MARKDOWN_FILE_PATH);
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        markdownText = await response.text();
+                    } catch (fetchError) {
+                        console.warn('Could not fetch markdown file, using mock data:', fetchError);
+                        markdownText = mockMarkdownData;
+                    }
+                    
+                    phases = parseMarkdown(markdownText);
+                    
+                    // Load saved progress
+                    const savedProgress = loadProgress();
+                    if (savedProgress && savedProgress.phases) {
+                        // Merge saved progress with current structure
+                        mergeProgress(phases, savedProgress.phases);
+                    }
+                    
+                    renderDashboard(phases);
+                    setupEventListeners();
+                    updateMotivationalQuote();
+                    showDashboard();
+                    
+                    showToast('Dashboard loaded successfully! 🎉');
+                } catch (error) {
+                    console.error('Error building dashboard:', error);
+                    showError(error);
+                }
+            }
+
+            function parseMarkdown(text) {
+                const lines = text.trim().split('\n');
+                const phases = [];
+                let currentPhase = null;
+
+                const phaseRegex = /^## 📋 (PHASE \d+:.*)/;
+                const taskRegex = /-\s*\[( |x)\]\s*(.*)/;
+
+                for (const line of lines) {
+                    const phaseMatch = line.match(phaseRegex);
+                    const taskMatch = line.match(taskRegex);
+
+                    if (phaseMatch) {
+                        currentPhase = { 
+                            title: phaseMatch[1], 
+                            tasks: [],
+                            collapsed: false,
+                            id: `phase-${phases.length}`
+                        };
+                        phases.push(currentPhase);
+                    } else if (taskMatch && currentPhase) {
+                        currentPhase.tasks.push({
+                            text: taskMatch[2].trim(),
+                            completed: taskMatch[1] === 'x',
+                            completedDate: null,
+                            id: `task-${currentPhase.tasks.length}`
+                        });
+                    }
+                }
+                return phases;
+            }
+
+            function mergeProgress(currentPhases, savedPhases) {
+                savedPhases.forEach((savedPhase, phaseIndex) => {
+                    if (currentPhases[phaseIndex]) {
+                        currentPhases[phaseIndex].collapsed = savedPhase.collapsed || false;
+                        
+                        savedPhase.tasks.forEach((savedTask, taskIndex) => {
+                            if (currentPhases[phaseIndex].tasks[taskIndex]) {
+                                currentPhases[phaseIndex].tasks[taskIndex].completed = savedTask.completed;
+                                currentPhases[phaseIndex].tasks[taskIndex].completedDate = savedTask.completedDate;
+                            }
+                        });
+                    }
+                });
+            }
+
+            function renderDashboard(phases) {
+                const phasesContainer = document.getElementById('phases-container');
+                phasesContainer.innerHTML = '';
+
+                totalTasks = 0;
+                completedTasks = 0;
+
+                phases.forEach((phase, phaseIndex) => {
+                    if (phase.tasks.length === 0) return;
+
+                    const phaseDiv = document.createElement('div');
+                    phaseDiv.className = `card phase-card ${phase.collapsed ? 'collapsed' : ''}`;
+                    phaseDiv.setAttribute('data-phase', phaseIndex);
+
+                    // Calculate phase progress
+                    const phaseTotalTasks = phase.tasks.length;
+                    const phaseCompletedTasks = phase.tasks.filter(task => task.completed).length;
+                    const phaseProgress = phaseTotalTasks > 0 ? (phaseCompletedTasks / phaseTotalTasks) * 100 : 0;
+
+                    const phaseHeader = document.createElement('div');
+                    phaseHeader.className = 'card-header';
+                    
+                    const phaseHeaderContent = document.createElement('div');
+                    phaseHeaderContent.className = 'phase-header';
+                    
+                    const phaseTitle = document.createElement('h2');
+                    phaseTitle.className = 'phase-title';
+                    phaseTitle.innerHTML = `<span class="phase-icon">📋</span><span>${phase.title}</span>`;
+                    
+                    const phaseInfo = document.createElement('div');
+                  phaseInfo.style.display = 'flex';
+                    phaseInfo.style.alignItems = 'center';
+                    phaseInfo.style.gap = '1rem';
+                    
+                    const phaseProgressDiv = document.createElement('div');
+                    phaseProgressDiv.className = 'phase-progress';
+                    phaseProgressDiv.innerHTML = `
+                        <span>${phaseCompletedTasks}/${phaseTotalTasks}</span>
+                        <div class="phase-progress-bar">
+                            <div class="phase-progress-fill" style="width: ${phaseProgress}%"></div>
+                        </div>
+                    `;
+                    
+                    const collapseBtn = document.createElement('button');
+                    collapseBtn.className = 'collapse-btn';
+                    collapseBtn.innerHTML = phase.collapsed ? '▶️' : '▼️';
+                    collapseBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        togglePhase(phaseIndex);
+                    };
+                    
+                    phaseInfo.appendChild(phaseProgressDiv);
+                    phaseInfo.appendChild(collapseBtn);
+                    
+                    phaseHeaderContent.appendChild(phaseTitle);
+                    phaseHeaderContent.appendChild(phaseInfo);
+                    phaseHeader.appendChild(phaseHeaderContent);
+                    phaseDiv.appendChild(phaseHeader);
+
+                    const phaseContent = document.createElement('div');
+                    phaseContent.className = 'card-content';
+                    
+                    const tasksList = document.createElement('div');
+                    tasksList.className = 'tasks-list';
+
+                    phase.tasks.forEach((task, taskIndex) => {
+                        totalTasks++;
+                        if (task.completed) completedTasks++;
+
+                        // Apply filter
+                        let shouldShow = true;
+                        if (currentFilter === 'completed' && !task.completed) shouldShow = false;
+                        if (currentFilter === 'pending' && task.completed) shouldShow = false;
+
+                        if (!shouldShow) return;
+
+                        const taskItem = document.createElement('div');
+                        taskItem.className = `task-item ${task.completed ? 'completed' : ''}`;
+                        taskItem.onclick = () => toggleTask(phaseIndex, taskIndex);
+
+                        const checkbox = document.createElement('div');
+                        checkbox.className = 'task-checkbox';
+                        checkbox.textContent = task.completed ? '✅' : '⭕';
+
+                        const taskText = document.createElement('div');
+                        taskText.className = 'task-text';
+                        taskText.textContent = task.text;
+
+                        const taskDate = document.createElement('div');
+                        taskDate.className = 'task-date';
+                        if (task.completed && task.completedDate) {
+                            taskDate.textContent = new Date(task.completedDate).toLocaleDateString();
+                        }
+
+                        taskItem.appendChild(checkbox);
+                        taskItem.appendChild(taskText);
+                        if (taskDate.textContent) taskItem.appendChild(taskDate);
+                        tasksList.appendChild(taskItem);
+                    });
+
+                    phaseContent.appendChild(tasksList);
+                    phaseDiv.appendChild(phaseContent);
+                    phasesContainer.appendChild(phaseDiv);
+                });
+
+                updateProgress();
+                updateStats();
+            }
+
+            function toggleTask(phaseIndex, taskIndex) {
+                const task = phases[phaseIndex].tasks[taskIndex];
+                task.completed = !task.completed;
+                
+                if (task.completed) {
+                    task.completedDate = new Date().toISOString();
+                    showToast('Great job! Task completed! 🎉');
+                } else {
+                    task.completedDate = null;
+                    showToast('Task marked as pending');
+                }
+                
+                saveProgress();
+                renderDashboard(phases);
+            }
+
+            function togglePhase(phaseIndex) {
+                phases[phaseIndex].collapsed = !phases[phaseIndex].collapsed;
+                saveProgress();
+                renderDashboard(phases);
+            }
+
+           function updateProgress() {
+                const percentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+                
+                document.getElementById('progress-bar').style.width = `${percentage}%`;
+                document.getElementById('progress-percentage').textContent = `${Math.round(percentage)}%`;
+                document.getElementById('progress-text').textContent = 
+                    `Overall Progress: ${completedTasks} / ${totalTasks} tasks completed`;
+            }
+
+            function updateStats() {
+                document.getElementById('stat-completed').textContent = completedTasks;
+                document.getElementById('stat-total').textContent = totalTasks;
+                document.getElementById('stat-remaining').textContent = totalTasks - completedTasks;
+                document.getElementById('stat-phases').textContent = phases.length;
+            }
+
+            function setupEventListeners() {
+                // Filter buttons
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const filter = e.target.getAttribute('data-filter');
+                        
+                        if (filter === 'expand-all') {
+                            phases.forEach(phase => phase.collapsed = false);
+                        } else if (filter === 'collapse-all') {
+                            phases.forEach(phase => phase.collapsed = true);
+                        } else {
+                            currentFilter = filter;
+                            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                            e.target.classList.add('active');
+                        }
+                        
+                        saveProgress();
+                        renderDashboard(phases);
+                    });
+                });
+
+                // Reset button
+                document.getElementById('resetBtn').addEventListener('click', () => {
+                    if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                        localStorage.removeItem(STORAGE_KEY);
+                        phases.forEach(phase => {
+                            phase.tasks.forEach(task => {
+                                task.completed = false;
+                                task.completedDate = null;
+                            });
+                            phase.collapsed = false;
+                        });
+                        renderDashboard(phases);
+                        showToast('Progress reset successfully!');
+                    }
+                });
+
+                // Export button
+                document.getElementById('exportBtn').addEventListener('click', () => {
+                    const progressData = {
+                        exportDate: new Date().toISOString(),
+                        totalTasks,
+                        completedTasks,
+                        completionPercentage: Math.round((completedTasks / totalTasks) * 100),
+                        phases: phases.map(phase => ({
+                            title: phase.title,
+                            totalTasks: phase.tasks.length,
+                            completedTasks: phase.tasks.filter(t => t.completed).length,
+                            tasks: phase.tasks.map(task => ({
+                                text: task.text,
+                                completed: task.completed,
+                                completedDate: task.completedDate
+                            }))
+                        }))
+                    };
+                    
+                    const dataStr = JSON.stringify(progressData, null, 2);
+                    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                    const url = URL.createObjectURL(dataBlob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `rust-learning-progress-${new Date().toISOString().split('T')[0]}.json`;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                    
+                    showToast('Progress exported successfully! 📊');
+                });
+            }
+
+            function showLoading() {
+                document.getElementById('loading-state').style.display = 'block';
+                document.getElementById('error-state').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'none';
+            }
+
+            function showError(error) {
+                document.getElementById('loading-state').style.display = 'none';
+                document.getElementById('error-state').style.display = 'block';
+                document.getElementById('dashboard').style.display = 'none';
+            }
+
+            function showDashboard() {
+                document.getElementById('loading-state').style.display = 'none';
+                document.getElementById('error-state').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+            }
+
+            // Initialize the dashboard
+            buildDashboard();
+
+            // Update motivational quote every 30 seconds
+            setInterval(updateMotivationalQuote, 30000);
+        });
+    </script>
+</body>
+</html>
