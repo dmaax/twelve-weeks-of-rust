@@ -1,5 +1,11 @@
+// src/index.js
 
 import { marked } from 'marked';
+
+// Import assets directly using ES module syntax
+import planMd from '../../docs/PLAN.md';
+import indexHtml from '../../static/index.html';
+import dashboardJs from './dashboard.js';
 
 /**
  * Parses the PLAN.md file content into a structured JSON object.
@@ -49,9 +55,7 @@ export default {
     async fetch(request, env, ctx) {
         const url = new URL(request.url);
 
-        const planMd = env.PLAN_MD;
-        const indexHtml = env.INDEX_HTML;
-        const dashboardJs = env.DASHBOARD_JS;
+        // The asset variables are now available from the imports above
 
         if (url.pathname === '/') {
             // 1. Parse the Markdown into a clean JSON object
@@ -59,7 +63,7 @@ export default {
 
             // 2. Inject the JSON data directly into a script tag
             const finalHtml = indexHtml.replace(
-                '<!--PLAN_DATA-->',
+                '',
                 `<script>window.PLAN_DATA = ${JSON.stringify(planData)};</script>`
             );
 

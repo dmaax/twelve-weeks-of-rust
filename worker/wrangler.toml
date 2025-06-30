@@ -6,10 +6,7 @@ compatibility_date = "2025-06-23"
 pattern = "twor.dmaax.pro"
 custom_domain = true
 
-# Use `text_blobs` to bind the content of files to string variables.
-# This makes `env.PLAN_MD`, `env.INDEX_HTML`, and `env.DASHBOARD_JS`
-# available as strings in the worker.
-[text_blobs]
-PLAN_MD = "../docs/PLAN.md"
-INDEX_HTML = "../static/index.html"
-DASHBOARD_JS = "./src/dashboard.js"
+[[rules]]
+type = "Text"
+globs = ["**/*.md", "**/*.html", "**/dashboard.js"]
+fallthrough = true
