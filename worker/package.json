@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "prebuild": "node prebuild.js",
-    "deploy": "npm run prebuild && npx wrangler publish",
-    "dev": "npm run prebuild && npx wrangler dev"
+    "deploy": "npx wrangler deploy",
+    "dev": "npx wrangler dev"
   },
-  "dependencies": {}
+  "dependencies": {
+    "marked": "^12.0.0"
+  }
 }
-
