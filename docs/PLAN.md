@@ -13,8 +13,8 @@
 #### Day 1-2: Setup and First Steps
 - [x] Install Rust via rustup
 - [x] Set up VS Code with rust-analyzer
-- [ ] Read Rust Book Chapters 1-3
-- [ ] **Project:** Hello World and variables
+- [x] Read Rust Book Chapters 1-3
+- [x] **Project:** Hello World and variables
 
 #### Day 3-4: Ownership and Borrowing
 - [ ] Rust Book Chapters 4-5
