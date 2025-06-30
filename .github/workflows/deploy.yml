@@ -23,10 +23,6 @@ jobs:
         run: npm ci
         working-directory: worker
 
-      - name: Build assets (prebuild)
-        run: npm run prebuild
-        working-directory: worker
-
       - name: Deploy para Cloudflare Workers
         run: npx wrangler deploy
         working-directory: worker
