@@ -17,10 +17,10 @@
 - [x] **Project:** Hello World and variables
 
 #### Day 3-4: Ownership and Borrowing
-- [ ] Rust Book Chapters 4-5
-- [ ] Do Rustlings exercises (ownership section)
-- [ ] **Project:** Basic CLI Calculator
-- [ ] Understand: ownership, borrowing, references
+- [x] Rust Book Chapters 4-5
+- [x] Do Rustlings exercises (ownership section)
+- [x] **Project:** Basic CLI Calculator
+- [x] Understand: ownership, borrowing, references
 
 #### Day 5-7: Structs and Error Handling
 - [ ] Rust Book Chapters 6-9
